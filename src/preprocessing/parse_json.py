@@ -14,7 +14,7 @@ def check_escape_chr(ch):
 import os
 rootdir = '../../../data/corpus-bioarxiv-250-plus-gold-annotations'
 rootdir2='../../../data/corpus-bioarxiv-250-plus-gold'
-target_file='input_file.txt'
+target_file='../../input_file.txt'
 target_string=""
 for subdir, dirs, files in os.walk(rootdir):
     for file in files:
@@ -106,7 +106,7 @@ for subdir, dirs, files in os.walk(rootdir):
                                     # print token_local
                                     #print "character:",loci_local[l]['i'][0][0]
                                     # print "elif",token_local
-                                    if "g" in loci_local[l-1]:
+                                    if "g" in loci_local[l-1] and check_escape_chr(loci_local[l-1]['g'][0][0]):
                                         end_x=loci_local[l-1]['g'][0][2][0]+loci_local[l-1]['g'][0][2][2]
                                         end_y=loci_local[l-1]['g'][0][2][1]+loci_local[l-1]['g'][0][2][3]
 
@@ -213,15 +213,17 @@ for subdir, dirs, files in os.walk(rootdir):
                     page_wise[ele[6]].append(list(ele)[:-1])
 
             for pg in all_pages:
-                target_string+=path
-                target_string+="\n"
+                # target_string+=path
+                # target_string+="\n"
                 tmp="0:0:"+str(page_x)+":"+str(page_y)+"\n"
+                # tmp="0:0:"+str(65000)+":"+str(80000)+"\n"
                 target_string+=tmp
                 tokens=page_wise[pg]
                 for ele in tokens:
-                    target_string+=(ele[0].encode('utf-8')+" "+str(ele[1])+":"+str(ele[2])+":"+str(ele[3])+":"+str(ele[4])+" * "+str(ele[5]))
-                    target_string+="\n"
-                target_string+="\n"
+                    if not ele[1]==0 and not ele[2]==0:
+                        target_string+=(ele[0].encode('utf-8')+" "+str(ele[1])+":"+str(ele[2])+":"+str(ele[3])+":"+str(ele[4])+" * "+str(ele[5]))
+                        target_string+="\n"
+                # target_string+="\n"
 
             f=open(target_file,'a')
             f.write(target_string)
